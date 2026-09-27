@@ -15,27 +15,22 @@ OWNER_STATE = {}
 
 def main_panel_keyboard():
     return InlineKeyboardMarkup([
-        # Row 1 — Premium Management
         [
             InlineKeyboardButton("⭐️ ADD PREMIUM", callback_data="own_addprem"),
             InlineKeyboardButton("🚫 REMOVE PREMIUM", callback_data="own_rmprem"),
         ],
-        # Row 2 — Lists
         [
             InlineKeyboardButton("💎 PREMIUM LIST", callback_data="own_premlist"),
             InlineKeyboardButton("👥 ALL USERS", callback_data="own_users"),
         ],
-        # Row 3 — Search & Reset
         [
             InlineKeyboardButton("🔍 USER INFO", callback_data="own_userinfo"),
             InlineKeyboardButton("🔄 RESET USAGE", callback_data="own_reset"),
         ],
-        # Row 4 — Broadcast
         [
             InlineKeyboardButton("📢 BROADCAST ALL", callback_data="own_bc_all"),
             InlineKeyboardButton("💎 BROADCAST PREMIUM", callback_data="own_bc_prem"),
         ],
-        # Row 5 — Ban System
         [
             InlineKeyboardButton("🔨 BAN USER", callback_data="own_ban"),
             InlineKeyboardButton("✅ UNBAN USER", callback_data="own_unban"),
@@ -43,17 +38,14 @@ def main_panel_keyboard():
         [
             InlineKeyboardButton("📋 BANNED LIST", callback_data="own_banlist"),
         ],
-        # Row 6 — Stats & Settings
         [
             InlineKeyboardButton("📊 STATISTICS", callback_data="own_stats"),
             InlineKeyboardButton("⚙️ SETTINGS", callback_data="own_settings"),
         ],
-        # Row 7 — Danger Zone
         [
             InlineKeyboardButton("🗑 DELETE USER", callback_data="own_deluser"),
             InlineKeyboardButton("💥 RESET ALL USAGE", callback_data="own_resetall"),
         ],
-        # Row 8 — Close
         [
             InlineKeyboardButton("❌ CLOSE PANEL", callback_data="own_close"),
         ]
@@ -84,8 +76,9 @@ async def owner_panel(client, message: Message):
 
 
 # ==================== CALLBACKS ====================
+# ⭐ FIX: sirf `own_*` callbacks handle karega — baaki settings/help ko nahi rokega
 
-@Client.on_callback_query(filters.user(Config.BOT_OWNER))
+@Client.on_callback_query(filters.user(Config.BOT_OWNER) & filters.regex(r'^own_'))
 async def owner_callbacks(client, query: CallbackQuery):
     data = query.data
     owner_id = query.from_user.id
@@ -354,15 +347,22 @@ async def owner_callbacks(client, query: CallbackQuery):
 
 
 # ==================== TEXT INPUT HANDLER ====================
+# ⭐ FIX: saare standard commands ko exclude karo taaki woh block na ho
 
-@Client.on_message(filters.user(Config.BOT_OWNER) & filters.private & ~filters.command([
-    "start", "owner", "addpremium", "removepremium", "premiumusers",
-    "resetuser", "broadcast", "stats", "cancel", "help", "myplan"
-]))
+@Client.on_message(
+    filters.user(Config.BOT_OWNER) & filters.private &
+    ~filters.command([
+        "start", "owner", "addpremium", "removepremium", "premiumusers",
+        "resetuser", "broadcast", "stats", "cancel", "help", "myplan",
+        "forward", "settings", "unequify", "stop", "reset", "restart",
+        "resetall"
+    ])
+)
 async def owner_text_handler(client, message: Message):
     owner_id = message.from_user.id
     state = OWNER_STATE.get(owner_id)
     if not state:
+        # Koi active state nahi → chupchap ignore karo
         return
 
     action = state['action']
