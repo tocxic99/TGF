@@ -4,7 +4,6 @@ from config import Config
 
 class Script(object):
 
-    # ⚠️ SIRF 1 placeholder (commands.py se compatible)
     START_TXT = """<b>ʜᴇʏ {} 👋
 
 ᴡᴇʟᴄᴏᴍᴇ ᴛᴏ ᴛʜᴇ ᴍᴏsᴛ ᴀᴅᴠᴀɴᴄᴇᴅ
@@ -276,3 +275,13 @@ class Script(object):
 📌 Status: <code>{}</code>
 ⏰ ETA: <code>{}</code>
 🕐 Uptime: <code>{}</code>"""
+
+    # ============ FORCE JOIN ============
+    FORCE_SUB_TXT = """⚠️ <b>ᴀᴄᴄᴇss ᴅᴇɴɪᴇᴅ!</b>
+
+ʏᴏᴜ ɴᴇᴇᴅ ᴛᴏ ᴊᴏɪɴ ᴏᴜʀ ᴄʜᴀɴɴᴇʟs
+ᴛᴏ ᴜsᴇ ᴛʜɪs ʙᴏᴛ.
+
+👇 ᴊᴏɪɴ ɴɪᴄʜᴇ ᴡᴀʟᴇ ᴄʜᴀɴɴᴇʟs
+ᴛʜᴇɴ ᴄʟɪᴄᴋ ✅ <b>ɪ ʜᴀᴠᴇ ᴊᴏɪɴᴇᴅ</b> ʙᴜᴛᴛᴏɴ."""
+    # ===================================
