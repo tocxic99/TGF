@@ -15,6 +15,7 @@ from pyrogram.errors import FloodWait, MessageNotModified
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, CallbackQuery, Message 
 from .db import connect_user_db
 from pyrogram.types import Message
+from helper import can_forward, consume_forward   # ⭐ PREMIUM LIMIT
 
 CLIENT = CLIENT()
 logger = logging.getLogger(__name__)
@@ -80,6 +81,21 @@ async def pub_(bot, message):
     except:
        await msg_edit(m, f"**Please Make Your [UserBot / Bot](t.me/{_bot['username']}) Admin In Target Channel With Full Permissions**", retry_btn(frwd_id), True)
        return await stop(client, user)
+
+    # ================= ⭐ PREMIUM LIMIT CHECK =================
+    allowed, reason, meta = await can_forward(user, count=1)
+    if not allowed:
+        try:
+            await msg_edit(m, reason, wait=True)
+        except Exception:
+            pass
+        try:
+            await client.stop()
+        except Exception:
+            pass
+        return
+    # ==========================================================
+
     user_have_db = False
     dburi = datas['db_uri']
     if dburi is not None:
@@ -92,7 +108,6 @@ async def pub_(bot, message):
     await db.add_frwd(user)
     await send(client, user, "<b>Fᴏʀᴡᴀᴅɪɴɢ sᴛᴀʀᴛᴇᴅ 🌼</b>")
     sts.add(time=True)
-    # FLOOD_WAIT se bachne ke liye sleep time badhaya gaya hai
     sleep = 5 if _bot['is_bot'] else 15
     await msg_edit(m, "<code>processing...</code>") 
     temp.IS_FRWD_CHAT.append(i.TO)
@@ -149,11 +164,9 @@ async def pub_(bot, message):
                       await asyncio.sleep(10)
                       MSG = []
                 else:
-                   # FIX: delete_words pass karein
                    new_caption = custom_caption(message, caption, sts.get('total_files'), datas.get('delete_words'))
                    details = {"msg_id": message.id, "media": media(message), "caption": new_caption, 'button': button, "protect": protect}
                    
-                   # --- AUTO PIN FEATURE START ---
                    is_first_message = (sts.get('total_files') == 0)
                    sent_msg = await copy(user, client, details, m, sts)
                    if is_first_message and sent_msg:
@@ -161,7 +174,6 @@ async def pub_(bot, message):
                            await client.pin_chat_message(chat_id=sts.get('TO'), message_id=sent_msg.id, disable_notification=True)
                        except Exception as e:
                            print(f"Pin error: {e}")
-                   # --- AUTO PIN FEATURE END ---
                    
                    sts.add('total_files')
                    await asyncio.sleep(sleep) 
@@ -190,6 +202,11 @@ async def copy(user, bot, msg, m, sts):
               caption=msg.get("caption"),
               reply_markup=msg.get('button'),
               protect_content=msg.get("protect"))
+        # ⭐ PREMIUM: consume 1 after successful send
+        try:
+            await consume_forward(user, count=1)
+        except Exception:
+            pass
         return sent
      else:
         sent = await bot.copy_message(
@@ -199,6 +216,11 @@ async def copy(user, bot, msg, m, sts):
               message_id=msg.get("msg_id"),
               reply_markup=msg.get('button'),
               protect_content=msg.get("protect"))
+        # ⭐ PREMIUM: consume 1 after successful send
+        try:
+            await consume_forward(user, count=1)
+        except Exception:
+            pass
         return sent
    except FloodWait as e:
      await edit(user, m, 'ᴘʀᴏɢʀᴇssɪɴɢ', e.value, sts)
@@ -217,6 +239,12 @@ async def forward(user, bot, msg, m, sts, protect):
            from_chat_id=sts.get('FROM'), 
            protect_content=protect,
            message_ids=msg)
+     # ⭐ PREMIUM: consume len(msg) after successful forward
+     try:
+         count = len(msg) if isinstance(msg, list) else 1
+         await consume_forward(user, count=count)
+     except Exception:
+         pass
    except FloodWait as e:
      await edit(user, m, 'ᴘʀᴏɢʀᴇssɪɴɢ', e.value, sts)
      await asyncio.sleep(e.value)
@@ -256,7 +284,7 @@ async def edit(user, msg, title, status, sts):
    estimated_total_time = TimeFormatter(milliseconds=estimated_total_time)
    estimated_total_time = estimated_total_time if estimated_total_time != '' else '0 s'
    if status in ["cancelled", "completed"]:
-      button.append([InlineKeyboardButton('• ᴄᴏᴍᴘʟᴇᴛᴇᴅ ​•', url='https://t.me/SteveBotz')])
+      button.append([InlineKeyboardButton('• ᴄᴏᴍᴘʟᴇᴛᴇᴅ ​•', url='https://t.me/RoRoNoi_bot')])
    else:
       button.append([InlineKeyboardButton('• ᴄᴀɴᴄᴇʟ', 'terminate_frwd')])
    await msg_edit(msg, text, InlineKeyboardMarkup(button))
@@ -286,7 +314,6 @@ async def send(bot, user, text):
    except:
       pass
 
-# FIXED: Word-by-word delete logic
 def custom_caption(msg, caption, count=0, delete_words=None):
   if msg.media:
     if (msg.video or msg.document or msg.audio or msg.photo):
@@ -300,15 +327,11 @@ def custom_caption(msg, caption, count=0, delete_words=None):
         
         modified_caption = fcaption if fcaption else ""
         
-        # --- DELETE WORDS LOGIC ---
         if delete_words and modified_caption:
             for word in delete_words:
-                # Har word ko case-insensitive tarike se delete karein
                 modified_caption = re.sub(re.escape(word), '', modified_caption, flags=re.IGNORECASE)
-            # Extra spaces aur newlines ko clean karein
             modified_caption = re.sub(r'\n\s*\n', '\n\n', modified_caption)
             modified_caption = modified_caption.strip()
-        # --- DELETE WORDS LOGIC END ---
         
         if caption:
           return caption.format(
@@ -405,7 +428,7 @@ async def status_msg(bot, msg):
     total = sts.get('limit') - sts.get('fetched')
     time_to_comple = await complete_time(total)
     est_time = est_time if (est_time != '' or status not in ['completed', 'cancelled']) else '0 s'
-    return await msg.answer(PROGRESS.format(percentage, fetched, forwarded, remaining, status, time_to_comple, uptime), show_alert=True)
+    return await msg.answer(Script.PROGRESS.format(percentage, fetched, forwarded, remaining, status, time_to_comple, uptime), show_alert=True)
 
 
 @Client.on_callback_query(filters.regex(r'^close_btn$'))
@@ -488,7 +511,7 @@ async def restart_pending_forwads(bot, user):
        try: 
           await client.get_messages(sts.get("FROM"), sts.get("limit"))
        except:
-          await msg_edit(m, f"**Source chat may be a private channel / group. Use userbot (user must be member over there) or  if Make Your [Bot](t.me/{_bot['username']}) an admin over there**", retry_btn(firwd_id), True)
+          await msg_edit(m, f"**Source chat may be a private channel / group. Use userbot (user must be member over there) or  if Make Your [Bot](t.me/{_bot['username']}) an admin over there**", retry_btn(forward_id), True)
           return await stop(client, user)
        try:
           k = await client.send_message(i.TO, "Testing")
@@ -498,6 +521,22 @@ async def restart_pending_forwads(bot, user):
           return await stop(client, user)
     except:
        return await db.rmve_frwd(user)
+
+    # ================= ⭐ PREMIUM LIMIT CHECK (RESTART) =================
+    allowed, reason, meta = await can_forward(user, count=1)
+    if not allowed:
+        try:
+            await msg_edit(m, reason, wait=True)
+        except Exception:
+            pass
+        try:
+            await client.stop()
+        except Exception:
+            pass
+        temp.forwardings -= 1
+        return
+    # =====================================================================
+
     user_have_db = False
     dburi = datas['db_uri']
     if dburi is not None:
@@ -571,11 +610,9 @@ async def restart_pending_forwads(bot, user):
                       await asyncio.sleep(10)
                       MSG = []
                 else:
-                   # FIX: delete_words pass karein
                    new_caption = custom_caption(message, caption, sts.get('total_files'), datas.get('delete_words'))
                    details = {"msg_id": message.id, "media": media(message), "caption": new_caption, 'button': button, "protect": protect}
                    
-                   # --- AUTO PIN FEATURE START (RESTART CASE) ---
                    is_first_message = (sts.get('total_files') == 0)
                    sent_msg = await copy(user, client, details, m, sts)
                    if is_first_message and sent_msg:
@@ -583,7 +620,6 @@ async def restart_pending_forwads(bot, user):
                            await client.pin_chat_message(chat_id=sts.get('TO'), message_id=sent_msg.id, disable_notification=True)
                        except Exception as e:
                            print(f"Pin error: {e}")
-                   # --- AUTO PIN FEATURE END ---
                    
                    sts.add('total_files')
                    await asyncio.sleep(sleep) 
