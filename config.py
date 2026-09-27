@@ -11,7 +11,7 @@ class Config:
 
     # ============ PREMIUM ============
     FREE_LIMIT = int(environ.get("FREE_LIMIT", "100"))
-    PREMIUM_CONTACT = environ.get("PREMIUM_CONTACT", "https://t.me/SteveBotz")
+    PREMIUM_CONTACT = environ.get("PREMIUM_CONTACT", "https://t.me/RoRoNoi_bot")
     PREMIUM_PRICE = environ.get("PREMIUM_PRICE", "₹49 / 30 Days")
     # =================================
 
