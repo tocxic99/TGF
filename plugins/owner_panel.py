@@ -1,4 +1,4 @@
-from datetime import datetime, date
+from datetime import datetime
 from pyrogram import Client, filters
 from pyrogram.types import (
     Message, CallbackQuery,
@@ -63,7 +63,7 @@ async def build_main_text():
         f"⭐️ <b>Premium Users:</b> <code>{len(premium_users)}</code>\n"
         f"🆓 <b>Free Users:</b> <code>{total - len(premium_users)}</code>\n"
         f"🚫 <b>Banned Users:</b> <code>{len(banned)}</code>\n"
-        f"📊 <b>Daily Free Limit:</b> <code>{Config.FREE_LIMIT}</code>\n"
+        f"📊 <b>Free Lifetime Limit:</b> <code>{Config.FREE_LIMIT}</code>\n"
         f"━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
         f"<i>🎯 Neeche buttons se sab kuch control karo 👇</i>"
     )
@@ -76,7 +76,6 @@ async def owner_panel(client, message: Message):
 
 
 # ==================== CALLBACKS ====================
-# ⭐ FIX: sirf `own_*` callbacks handle karega — baaki settings/help ko nahi rokega
 
 @Client.on_callback_query(filters.user(Config.BOT_OWNER) & filters.regex(r'^own_'))
 async def owner_callbacks(client, query: CallbackQuery):
@@ -287,7 +286,7 @@ async def owner_callbacks(client, query: CallbackQuery):
             f"🆓 Free Users: <code>{total - len(premium)}</code>\n"
             f"🚫 Banned Users: <code>{len(banned)}</code>\n"
             f"📈 Conversion: <code>{conv:.1f}%</code>\n"
-            f"📊 Free Daily Limit: <code>{Config.FREE_LIMIT}</code>\n"
+            f"📊 Free Lifetime Limit: <code>{Config.FREE_LIMIT}</code>\n"
             f"━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
             f"🤖 Bot Owner: <code>{Config.BOT_OWNER}</code>"
         )
@@ -304,7 +303,7 @@ async def owner_callbacks(client, query: CallbackQuery):
         text = (
             f"⚙️ <b>BOT SETTINGS</b>\n"
             f"━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
-            f"📊 Free Daily Limit: <code>{Config.FREE_LIMIT}</code>\n"
+            f"📊 Free Lifetime Limit: <code>{Config.FREE_LIMIT}</code>\n"
             f"💵 Premium Price: <code>{Config.PREMIUM_PRICE}</code>\n"
             f"💬 Contact: {Config.PREMIUM_CONTACT}\n"
             f"👑 Owner ID: <code>{Config.BOT_OWNER}</code>\n"
@@ -334,20 +333,19 @@ async def owner_callbacks(client, query: CallbackQuery):
         )
         return
 
-    # ---------- RESET ALL USAGE ----------
+    # ---------- RESET ALL USAGE (Lifetime) ----------
     if data == "own_resetall":
         await db.col.update_many(
             {},
-            {'$set': {'usage': {'date': date.today().isoformat(), 'count': 0}}}
+            {'$set': {'usage': {'count': 0}}}
         )
-        await query.answer("✅ Sab users ka usage reset ho gaya!", show_alert=True)
+        await query.answer("✅ Sab users ka lifetime usage reset ho gaya!", show_alert=True)
         return
 
     await query.answer("Unknown action", show_alert=True)
 
 
 # ==================== TEXT INPUT HANDLER ====================
-# ⭐ FIX: saare standard commands ko exclude karo taaki woh block na ho
 
 @Client.on_message(
     filters.user(Config.BOT_OWNER) & filters.private &
@@ -362,7 +360,6 @@ async def owner_text_handler(client, message: Message):
     owner_id = message.from_user.id
     state = OWNER_STATE.get(owner_id)
     if not state:
-        # Koi active state nahi → chupchap ignore karo
         return
 
     action = state['action']
@@ -401,7 +398,7 @@ async def owner_text_handler(client, message: Message):
             f"🆔 ID: <code>{uid}</code>\n"
             f"📌 Status: {ban_text}\n"
             f"⭐️ Plan: {prem_text}\n"
-            f"📊 Today Used: <code>{usage.get('count',0)}/{Config.FREE_LIMIT}</code>\n"
+            f"📊 Lifetime Used: <code>{usage.get('count',0)}/{Config.FREE_LIMIT}</code>\n"
             f"━━━━━━━━━━━━━━━━━━━━━━━━━━"
         )
         OWNER_STATE.pop(owner_id, None)
@@ -469,21 +466,21 @@ async def owner_text_handler(client, message: Message):
             pass
         return
 
-    # ========== RESET USAGE ==========
+    # ========== RESET USAGE (Lifetime) ==========
     if action == 'reset_usage' and step == 'waiting_uid':
         OWNER_STATE.pop(owner_id, None)
         if text.lower() == 'all':
             await db.col.update_many(
                 {},
-                {'$set': {'usage': {'date': date.today().isoformat(), 'count': 0}}}
+                {'$set': {'usage': {'count': 0}}}
             )
-            return await message.reply_text("✅ Sab users ka usage reset ho gaya.")
+            return await message.reply_text("✅ Sab users ka lifetime usage reset ho gaya.")
         try:
             uid = int(text)
         except ValueError:
             return await message.reply_text("❌ Invalid ID.")
         await db.reset_user_usage(uid)
-        await message.reply_text(f"✅ Usage reset for <code>{uid}</code>")
+        await message.reply_text(f"✅ Lifetime usage reset for <code>{uid}</code>")
         return
 
     # ========== BAN USER ==========
