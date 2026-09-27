@@ -16,8 +16,9 @@ async def my_plan(client, message: Message):
             f"⭐️ <b>You are a PREMIUM user!</b>\n\n"
             f"📅 Expires: <code>{expiry.strftime('%d %b %Y, %I:%M %p')}</code>\n"
             f"⏳ Days left: <code>{days_left}</code>\n"
-            f"♾ Daily limit: <b>UNLIMITED</b>\n\n"
-            f"Thanks for supporting us ❤️"
+            f"♾ Limit: <b>UNLIMITED</b>\n\n"
+            f"Thanks for supporting us ❤️",
+            disable_web_page_preview=True
         )
     else:
         usage = await db.get_usage(user_id)
@@ -25,14 +26,15 @@ async def my_plan(client, message: Message):
         limit = Config.FREE_LIMIT
         remaining = max(0, limit - used)
         await message.reply_text(
-            f"👤 <b>Plan:</b> 🆓 Free\n\n"
-            f"📊 Daily limit: <code>{limit}</code>\n"
-            f"✅ Used today: <code>{used}</code>\n"
+            f"👤 <b>Plan:</b> 🆓 Free (Lifetime)\n\n"
+            f"📊 Total limit: <code>{limit}</code>\n"
+            f"✅ Used: <code>{used}</code>\n"
             f"🔋 Remaining: <code>{remaining}</code>\n\n"
             f"⭐️ <b>Upgrade to Premium</b> for <b>UNLIMITED</b> forwarding!\n"
             f"💵 Price: <code>{Config.PREMIUM_PRICE}</code>\n"
             f"💬 Contact: {Config.PREMIUM_CONTACT}\n\n"
-            f"<i>Limit resets daily at 12:00 AM.</i>"
+            f"<i>⚠️ Free limit lifetime hai — ek baar khatam, bas!</i>",
+            disable_web_page_preview=True
         )
 
 
