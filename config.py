@@ -15,6 +15,15 @@ class Config:
     PREMIUM_PRICE = environ.get("PREMIUM_PRICE", "₹49 / 30 Days")
     # =================================
 
+    # ============ FORCE JOIN ============
+    # Format: (username_or_id, invite_link)
+    # Note: Bot must be admin in these channels
+    FORCE_SUB_CHANNELS = [
+        ("@UpdateChannel", "https://t.me/+m7mFkK5rb9dhZDQ1"),
+        ("@MainChannel", "https://t.me/+07sFuNmODcwyMGQ1"),
+    ]
+    # =====================================
+
 
 class temp(object): 
     lock = {}
