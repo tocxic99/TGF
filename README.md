@@ -1,47 +1,29 @@
-# SteveBotz Forward Bot
-
-<b>Auto Restart All User Forwarding After Bot Restarted.</b>
-
-![Typing SVG](https://readme-typing-svg.herokuapp.com/?lines=Welcome+To+SteveBotz+Forward+Bot+!)
-
-## How To Deploy [Video Tutorial](https://youtu.be/A-iIh_5WAlk)
-
-## Features
-
-- [x] Public Forward (Bot)
-- [x] Private Forward (User Bot)
-- [x] Custom Caption 
-- [x] Custom Button
-- [x] Skip Duplicate Messages
-- [x] Skip Messages Based On Extensions & Keywords & Size
-- [x] Filter Type Of Messages
-- [x] Auto Restart Pending Task After Bot Restart 
-
-
-<b>To Know About All Features, Join My <a href='https://t.me/SteveBotz'>Update Channel</a>.</b>
-
-## Commands
-
-```
-start - check I'm alive 
-forward - forward messages
-unequify - delete duplicate media messages in chats
-settings - configure your settings
-stop - stop your ongoing tasks
-reset - reset your settings
-restart - restart server (owner only)
-resetall - reset all users settings (owner only)
-broadcast - broadcast a message to all your users (owner only)
-```
-
-## Variables
-
-* `API_ID` API Id from my.telegram.org
-* `API_HASH` API Hash from my.telegram.org
-* `BOT_TOKEN` Bot token from @BotFather
-* `BOT_OWNER` Telegram Account Id of Owner.
-* `DATABASE_URI` Database uri from [MongoDB](https://mongodb.com) Watch [Video Tutorial](https://youtu.be/DAHRmFdw99o)
-
-## Credits
-
-* <b>[SteveBotz](https://t.me/SteveBotz)</b>
+Auto-Forward-Test-main/              ← 🏠 ROOT FOLDER
+│
+├── 📂 plugins/                      ← Saare command handlers
+│   ├── __init__.py                  ← (khali file - agar nahi hai toh banao)
+│   ├── broadcast.py                 ← Broadcast commands
+│   ├── commands.py                  ← Basic commands (/start, /help, etc.)
+│   ├── db.py                        ← DB helper commands
+│   ├── owner_panel.py               ← ⭐ ADMIN PANEL (colorful buttons)
+│   ├── premium.py                   ← ⭐ PREMIUM system (/myplan, /addpremium)
+│   ├── public.py                    ← Public forward (bot)
+│   ├── regix.py                     ← 🔥 MAIN FORWARDING ENGINE (limit check yahan)
+│   ├── settings.py                  ← /settings command
+│   ├── test.py                      ← Test commands
+│   ├── unequify.py                  ← Duplicate delete
+│   └── utils.py                     ← Helper utilities
+│
+├── 📄 .python-version               ← Python version (runtime)
+├── 📄 app.py                        ← Flask app (Koyeb health check)
+├── 📄 config.py                     ← ⚙️ API_ID, BOT_TOKEN, OWNER, PREMIUM settings
+├── 📄 database.py                   ← 💾 MongoDB (users, premium, usage)
+├── 📄 Dockerfile                    ← Docker deploy config
+├── 📄 helper.py                     ← ⭐ can_forward() / consume_forward()
+├── 📄 LICENCE                       ← License file
+├── 📄 main.py                       ← 🚀 Bot entry point
+├── 📄 Procfile                      ← Deploy process file
+├── 📄 README.md                     ← Documentation
+├── 📄 requirements.txt              ← Python dependencies
+├── 📄 run cmd.txt                   ← Run command (gunicorn + main.py)
+└── 📄 script.py                     ← 📝 All text templates
