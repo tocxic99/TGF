@@ -4,6 +4,7 @@ from config import Config
 
 class Script(object):
 
+    # ⚠️ Sirf 1 placeholder — name ke liye
     START_TXT = """<b>ʜᴇʏ {} 👋
 
 ᴡᴇʟᴄᴏᴍᴇ ᴛᴏ ᴛʜᴇ ᴍᴏsᴛ ᴀᴅᴠᴀɴᴄᴇᴅ
@@ -13,13 +14,16 @@ class Script(object):
 ᴡɪᴛʜ sᴘᴇᴇᴅ ᴀɴᴅ sᴍᴀʀᴛ ғɪʟᴛᴇʀs</b>
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
-📊 <b>ʏᴏᴜʀ ᴘʟᴀɴ:</b> <code>{}</code>
-🔋 <b>ᴅᴀɪʟʏ ʟɪᴍɪᴛ:</b> <code>{}</code>
-✅ <b>ᴜsᴇᴅ ᴛᴏᴅᴀʏ:</b> <code>{}</code>
+🆓 <b>ꜰʀᴇᴇ ᴜsᴇʀs:</b> <code>100</code> ꜰᴏʀᴡᴀʀᴅs/ᴅᴀʏ
+⭐️ <b>ᴘʀᴇᴍɪᴜᴍ ᴜsᴇʀs:</b> <b>ᴜɴʟɪᴍɪᴛᴇᴅ</b>
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ℹ️ ᴜsᴇ /myplan ᴛᴏ ᴄʜᴇᴄᴋ ʏᴏᴜʀ ᴘʟᴀɴ
+📊 ᴜsᴇ /help ᴛᴏ sᴇᴇ ᴀʟʟ ᴄᴏᴍᴍᴀɴᴅs
 
 <b>ᴄʟɪᴄᴋ ᴛʜᴇ ʙᴜᴛᴛᴏɴs ʙᴇʟᴏᴡ ᴛᴏ ᴇxᴘʟᴏʀᴇ 👇</b>"""
 
+    # ⚠️ Koi placeholder nahi — sab hardcoded
     HELP_TXT = """<b><u>🔶 ʜᴇʟᴘ</u></b>
 
 <u><b>📚 ᴀᴠᴀɪʟᴀʙʟᴇ ᴄᴏᴍᴍᴀɴᴅs:</b></u>
@@ -35,11 +39,10 @@ class Script(object):
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
 <b><u>💎 ᴘʀᴇᴍɪᴜᴍ ʙᴇɴᴇꜰɪᴛs:</b></u>
 
-🆓 <b>Free Users:</b> <code>{}</code> ꜰᴏʀᴡᴀʀᴅs/ᴅᴀʏ
+🆓 <b>Free Users:</b> <code>100</code> ꜰᴏʀᴡᴀʀᴅs/ᴅᴀʏ
 ⭐️ <b>Premium Users:</b> <b>ᴜɴʟɪᴍɪᴛᴇᴅ</b> ꜰᴏʀᴡᴀʀᴅs
 
-💵 <b>ᴘʀɪᴄᴇ:</b> <code>{}</code>
-💬 <b>ᴄᴏɴᴛᴀᴄᴛ:</b> {}
+💬 <b>ᴄᴏɴᴛᴀᴄᴛ:</b> https://t.me/RoRoNoi_bot
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
 <b><u>🚀 ꜰᴇᴀᴛᴜʀᴇs:</b></u>
@@ -71,6 +74,7 @@ class Script(object):
 💡 <b>ᴛɪᴘ:</b> ɪꜰ ʏᴏᴜ ɴᴇᴇᴅ ᴜɴʟɪᴍɪᴛᴇᴅ ꜰᴏʀᴡᴀʀᴅs,
 ᴜᴘɢʀᴀᴅᴇ ᴛᴏ ⭐️ <b>ᴘʀᴇᴍɪᴜᴍ</b> ᴜsɪɴɢ /myplan"""
 
+    # ⚠️ Koi placeholder nahi
     ABOUT_TXT = """<b>
 ╔══════════════════════════╗
       🤖 ᴀʙᴏᴜᴛ ᴛʜɪs ʙᴏᴛ
@@ -78,16 +82,17 @@ class Script(object):
 
 ⏣ 📛 ɴᴀᴍᴇ : <a href='https://t.me/RoRoNoi_bot'>Rorono Forwarding Bot</a>
 ⏣ 👤 ᴄʀᴇᴀᴛᴏʀ : <a href='https://t.me/RoRoNoi_bot'>RoRo</a>
-⏣ 📢 ᴜᴘᴅᴀᴛᴇs : <a href='https://t.me/+m7mFkK5rb9dhZDQ1'>Rorono Forwarding Bot</a>
-⏣ 📣 ᴄʜᴀɴɴᴇʟ : <a href='https://t.me/+07sFuNmODcwyMGQ1'>Rorono Forwarding Bot</a>
+⏣ 📢 ᴜᴘᴅᴀᴛᴇs : <a href='https://t.me/+m7mFkK5rb9dhZDQ1'>Update Channel</a>
+⏣ 📣 ᴄʜᴀɴɴᴇʟ : <a href='https://t.me/+07sFuNmODcwyMGQ1'>Main Channel</a>
 ⏣ 💬 ᴄᴏɴᴛᴀᴄᴛ : <a href='https://t.me/RoRoNoi_bot'>@RoRoNoi_bot</a>
-⏣ 📡 ʜᴏsᴛᴇᴅ ᴏɴ : <a href='https://t.me/Roronoazero1'>Roronoazero1</a>
+⏣ 📡 ʜᴏsᴛᴇᴅ ᴏɴ : Roronoazero1
 ⏣ 🗣️ ʟᴀɴɢᴜᴀɢᴇ : ᴘʏᴛʜᴏɴ 3
 ⏣ 📚 ʟɪʙʀᴀʀʏ : ᴘʏʀᴏɢʀᴀᴍ 2.11.0
 ⏣ 🗒️ ᴠᴇʀsɪᴏɴ : 0.18.3
 ╚══════════════════════════╝
 </b>"""
 
+    # ⚠️ 4 placeholders (same as original)
     STATUS_TXT = """
 ╔══════════════════════════╗
         📊 ʙᴏᴛ sᴛᴀᴛᴜs
@@ -215,6 +220,7 @@ class Script(object):
 
     SETTINGS_TXT = """<b>⚙️ ᴄʜᴀɴɢᴇ ʏᴏᴜʀ sᴇᴛᴛɪɴɢs ᴀs ʏᴏᴜ ᴡɪsʜ</b>"""
 
+    # ⚠️ 8 placeholders (same as original)
     TEXT = """
 ╔══════════════════════════╗
       📡 ꜰᴏʀᴡᴀʀᴅ sᴛᴀᴛᴜs
